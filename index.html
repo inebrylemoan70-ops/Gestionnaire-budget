@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion, Projection & Projets d'Achat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+    <div>
+        <h1>Projection Budgétaire & Projets</h1>
+        <p>Outil d'estimation de trésorerie avec paie le 25 et suivi du mois en cours</p>
+    </div>
+    <div style="margin-top: 10px;">
+        <a href="projet.html" class="btn btn-primary">🚀 Voir / Analyser les Projets Détaillés</a>
+    </div>
+</header>
+
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Paramètres Général & Comptes Courants</h2>
+            <div class="form-grid mb-20">
+                <div class="form-group">
+                    <label for="payDay">Jour de paie dans le mois</label>
+                    <input type="number" id="payDay" value="25" min="1" max="31">
+                </div>
+                <div class="form-group">
+                    <label for="monthsToProject">Durée de projection (mois)</label>
+                    <input type="number" id="monthsToProject" value="12" min="1" max="60">
+                </div>
+                <div class="form-group">
+                    <label for="savingsRate">Part du reste à vivre épargnée (%)</label>
+                    <input type="number" id="savingsRate" value="50" min="0" max="100">
+                </div>
+            </div>
+
+            <h3 class="sub-title">Vos Comptes Courants</h3>
+            <div class="form-row flex-wrap">
+                <input type="text" id="checkingName" placeholder="Banque / Compte (ex: Boursorama)">
+                <input type="number" id="checkingBalance" placeholder="Solde actuel (€)" step="0.01">
+                <button id="addCheckingBtn" class="btn btn-primary">Ajouter / Mettre à jour</button>
+                <button id="cancelEditCheckingBtn" class="btn btn-secondary" style="display: none;">Annuler</button>
+            </div>
+            <ul id="checkingList" class="data-list"></ul>
+        </section>
+
+        <div class="grid-2">
+            <section class="card shadow-sm">
+                <h2 class="card-title">Revenus Récurrents</h2>
+                <div class="form-row flex-wrap">
+                    <input type="text" id="incomeName" placeholder="Libellé (ex: Salaire)">
+                    <input type="number" id="incomeAmount" placeholder="Montant (€)" step="0.01">
+                    <button id="addIncomeBtn" class="btn btn-primary">Ajouter</button>
+                    <button id="cancelEditIncomeBtn" class="btn btn-secondary" style="display: none;">Annuler</button>
+                </div>
+                <ul id="incomeList" class="data-list"></ul>
+            </section>
+
+            <section class="card shadow-sm">
+                <h2 class="card-title">Dépenses Récurrentes</h2>
+                <div class="form-row flex-wrap">
+                    <input type="text" id="expenseName" placeholder="Libellé (ex: Loyer)">
+                    <input type="number" id="expenseAmount" placeholder="Montant (€)" step="0.01">
+                    <button id="addExpenseBtn" class="btn btn-secondary">Ajouter</button>
+                    <button id="cancelEditExpenseBtn" class="btn btn-secondary" style="display: none;">Annuler</button>
+                </div>
+                <ul id="expenseList" class="data-list"></ul>
+            </section>
+        </div>
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Comptes d'Épargne & Objectifs</h2>
+            <div class="form-row flex-wrap">
+                <input type="text" id="savingsName" placeholder="Nom du compte (ex: Livret A)">
+                <input type="number" id="savingsBalance" placeholder="Solde actuel (€)" step="0.01">
+                <input type="number" id="savingsTarget" placeholder="Objectif visé (€)" step="0.01">
+                <button id="addSavingsBtn" class="btn btn-primary">Ajouter le compte</button>
+                <button id="cancelEditSavingsBtn" class="btn btn-secondary" style="display: none;">Annuler</button>
+            </div>
+            <ul id="savingsList" class="data-list"></ul>
+        </section>
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Projets d'Achat & Dépenses Ponctuelles</h2>
+            <div class="form-row flex-wrap">
+                <input type="text" id="projectName" placeholder="Objet (ex: Voyage)">
+                <input type="number" id="projectAmount" placeholder="Coût (€)" step="0.01">
+                <select id="projectMonthSelect"></select>
+                <select id="projectSourceSelect">
+                    <option value="checking">Prélever sur : Compte courant</option>
+                    <option value="savings">Prélever sur : Épargne</option>
+                </select>
+                <button id="addProjectBtn" class="btn btn-primary">Planifier l'achat</button>
+                <button id="cancelEditProjectBtn" class="btn btn-secondary" style="display: none;">Annuler</button>
+            </div>
+            <ul id="projectList" class="data-list"></ul>
+        </section>
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Synthèse Financière</h2>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <span class="metric-label">Solde Courant Actuel</span>
+                    <span id="totalCheckingCurrent" class="metric-value">0.00 €</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Capacité d'épargne</span>
+                    <span id="monthlyNet" class="metric-value">0.00 €</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Épargne versée / mois</span>
+                    <span id="monthlySavings" class="metric-value positive">0.00 €</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Total Épargne Actuel</span>
+                    <span id="totalSavingsCurrent" class="metric-value">0.00 €</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Objectif Épargne Total</span>
+                    <span id="totalSavingsTarget" class="metric-value">0.00 €</span>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Avancement global des objectifs d'épargne</span>
+                    <span id="globalProgressPercent" class="progress-percent">0.0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="globalProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Échéancier & Projections (incluant le mois en cours)</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th>Achats Prévus</th>
+                            <th>Solde Avant Paie</th>
+                            <th>Solde Fin de Mois</th>
+                            <th>Total Épargne</th>
+                            <th>Patrimoine Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectionBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card shadow-sm">
+            <h2 class="card-title">Sauvegarde & Restauration des données</h2>
+            <div class="backup-actions">
+                <button id="exportBtn" class="btn btn-secondary">💾 Exporter les données (JSON)</button>
+                <button id="importBtn" class="btn btn-secondary">📂 Importer un fichier</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
