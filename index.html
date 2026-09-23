@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon Budget - Gestion & Projection Financière</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Horizon Budget</h1>
+        <p class="subtitle">Gestion & Projection Financière Exacte</p>
+    </header>
+
+    <nav class="main-nav">
+        <button class="nav-btn active" data-tab="tab-dashboard">Tableau de Bord</button>
+        <button class="nav-btn" data-tab="tab-projection">Projection</button>
+        <button class="nav-btn" data-tab="tab-projects">Projets</button>
+        <button class="nav-btn" data-tab="tab-settings">Paramètres & Données</button>
+    </nav>
+
+    <main class="container">
+
+        <!-- ONGLET TABLEAU DE BORD -->
+        <section id="tab-dashboard" class="tab-content active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-label">Solde Compte Courant Total</span>
+                    <span class="metric-value" id="metric-total-checking">0.00 €</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Revenus Mensuels</span>
+                    <span class="metric-value text-success" id="metric-income">+0.00 €</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Dépenses Mensuelles</span>
+                    <span class="metric-value text-danger" id="metric-expense">-0.00 €</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Reste à Vivre Brut</span>
+                    <span class="metric-value" id="metric-leftover">0.00 €</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Épargne Mensuelle Automatique</span>
+                    <span class="metric-value text-primary" id="metric-savings-monthly">+0.00 €</span>
+                </div>
+            </div>
+
+            <!-- PROGRÈS ÉPARGNE -->
+            <div class="card margin-top">
+                <h3>Progression vers l'Objectif d'Épargne Global</h3>
+                <p id="progress-text" class="section-desc">0.00 € / 0.00 €</p>
+                <div class="progress-container">
+                    <div class="progress-bar" id="savings-progress-bar">0%</div>
+                </div>
+            </div>
+
+            <!-- COMPTES & OPÉRATIONS -->
+            <div class="grid-2-cols margin-top">
+                <!-- COMPTES COURANTS -->
+                <div class="card">
+                    <h3>Comptes Courants</h3>
+                    <ul class="item-list" id="list-checkings"></ul>
+                    <form id="form-checking" class="form-inline margin-top">
+                        <input type="text" id="checking-label" placeholder="Nom (ex: BoursoBank)" required>
+                        <input type="number" step="0.01" id="checking-amount" placeholder="Solde (€)" required>
+                        <button type="submit" class="btn primary-btn">+ Ajouter</button>
+                    </form>
+                </div>
+
+                <!-- REVENUS FIXES -->
+                <div class="card">
+                    <h3>Revenus Mensuels Fixes</h3>
+                    <ul class="item-list" id="list-incomes"></ul>
+                    <form id="form-income" class="form-inline margin-top">
+                        <input type="text" id="income-label" placeholder="Source (ex: Salaire)" required>
+                        <input type="number" step="0.01" id="income-amount" placeholder="Montant (€)" required>
+                        <button type="submit" class="btn primary-btn">+ Ajouter</button>
+                    </form>
+                </div>
+
+                <!-- DÉPENSES FIXES -->
+                <div class="card">
+                    <h3>Dépenses Mensuelles Fixes</h3>
+                    <ul class="item-list" id="list-expenses"></ul>
+                    <form id="form-expense" class="form-inline margin-top">
+                        <input type="text" id="expense-label" placeholder="Libellé" required>
+                        <input type="number" step="0.01" id="expense-amount" placeholder="Montant (€)" required>
+                        <input type="text" id="expense-category" placeholder="Catégorie" required>
+                        <button type="submit" class="btn primary-btn">+ Ajouter</button>
+                    </form>
+                </div>
+
+                <!-- SUPPORTS D'ÉPARGNE -->
+                <div class="card">
+                    <h3>Comptes d'Épargne</h3>
+                    <ul class="item-list" id="list-savings"></ul>
+                    <form id="form-savings" class="form-inline margin-top">
+                        <input type="text" id="savings-label" placeholder="Nom (ex: Livret A)" required>
+                        <input type="number" step="0.01" id="savings-current" placeholder="Solde (€)" required>
+                        <input type="number" step="0.01" id="savings-target" placeholder="Objectif (€)" required>
+                        <input type="number" step="0.1" id="savings-rate-interest" placeholder="Taux (%)">
+                        <button type="submit" class="btn primary-btn">+ Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ONGLET PROJECTION -->
+        <section id="tab-projection" class="tab-content">
+            <div class="card">
+                <h3>Projection Financière</h3>
+                <p class="section-desc">Visualisez l'évolution prévisionnelle de vos solde de compte courant et d'épargne.</p>
+                <div class="table-wrapper margin-top">
+                    <table class="projection-table">
+                        <thead>
+                            <tr>
+                                <th>Date / Mois</th>
+                                <th>Solde Dép.</th>
+                                <th>Revenus</th>
+                                <th>Dépenses</th>
+                                <th>Épargne auto.</th>
+                                <th>Événements / Projets</th>
+                                <th>Solde Fin C.C</th>
+                                <th>Solde Épargne</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projection-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ONGLET PROJETS -->
+        <section id="tab-projects" class="tab-content">
+            <div class="card">
+                <h3>Ajouter un Projet ponctuel</h3>
+                <form id="form-project-page" class="form-grid margin-top">
+                    <div class="form-group">
+                        <label>Nom du projet :</label>
+                        <input type="text" id="project-label-p" placeholder="ex: Vacances d'été" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Coût estimé (€) :</label>
+                        <input type="number" step="0.01" id="project-amount-p" placeholder="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mois de réalisation (AAAA-MM) :</label>
+                        <input type="month" id="project-date-p" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Source de financement :</label>
+                        <select id="project-source-p">
+                            <option value="checking">Compte Courant</option>
+                            <option value="savings">Épargne</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn primary-btn grid-span-full">+ Planifier le projet</button>
+                </form>
+            </div>
+
+            <div class="card margin-top">
+                <h3>Liste des Projets Planifiés</h3>
+                <div id="projects-container" class="projects-grid margin-top"></div>
+            </div>
+        </section>
+
+        <!-- ONGLET PARAMÈTRES & DONNÉES -->
+        <section id="tab-settings" class="tab-content">
+            <div class="card">
+                <h3>Configuration Générale</h3>
+                <div class="form-grid margin-top">
+                    <div class="form-group">
+                        <label>Jour de versement de la paie :</label>
+                        <input type="number" id="pay-day" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label>Paie reçue ce mois-ci ?</label>
+                        <select id="pay-received">
+                            <option value="false">Non (À inclure ce mois-ci)</option>
+                            <option value="true">Oui (Déjà perçue)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Horizon de projection (mois) :</label>
+                        <input type="number" id="horizon" min="1" max="60">
+                    </div>
+                    <div class="form-group">
+                        <label>Taux d'épargne du reste à vivre (%) :</label>
+                        <input type="number" id="savings-rate" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card margin-top">
+                <h3>Gestion des Données (Import / Export)</h3>
+                <div class="form-inline margin-top" style="gap: 1rem;">
+                    <button id="export-btn" class="btn secondary-btn">Exporter les données (JSON)</button>
+                    <label for="import-file" class="btn secondary-btn" style="cursor: pointer;">
+                        Importer un fichier JSON
+                    </label>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                    <button id="reset-btn" class="btn danger-btn">Réinitialiser les données</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODALE ÉDITION ÉLÉMENTS -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Modifier l'élément</h3>
+                <button class="icon-btn" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn secondary-btn" id="modal-cancel-btn">Annuler</button>
+                <button class="btn primary-btn" id="modal-save-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE VIREMENT PONCTUEL -->
+    <div class="modal-overlay" id="transfer-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Virement exceptionnel</h3>
+                <button class="icon-btn" id="transfer-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="transfer-modal-desc" style="margin-bottom: 1rem; color: var(--text-secondary);"></p>
+                <div class="form-group">
+                    <label for="transfer-amount-input">Montant (€) :</label>
+                    <input type="number" step="0.01" id="transfer-amount-input" placeholder="0.00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-btn" id="transfer-cancel-btn">Annuler</button>
+                <button class="btn primary-btn" id="transfer-save-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    
+</body>
+</html>
